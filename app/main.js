@@ -17,6 +17,8 @@ function AudioToy() {
 	this.compilationDelay = 1000; // Milliseconds before compilation to occur after an edit
 	this.t = 0;
 	this.sampleRate = 44100;
+	this.bufferSize = 4096; // Must be power of two
+	this.performanceRatio = 0; // Value between 0 and 1 indicating the CPU usage (1 is the bad limit).
 }
 AudioToy.prototype = {
 
@@ -35,9 +37,11 @@ AudioToy.prototype = {
 			self.lastCodeChangeTime = Date.now();
 		});
 
-		// Create graphic context
+		// Create graphic contexts
 		this.waveCanvas = document.getElementById("wave-canvas");
-		this.canvasContext = this.waveCanvas.getContext("2d");
+		this.waveCanvasContext = this.waveCanvas.getContext("2d");
+		this.perfCanvas = document.getElementById("perf-canvas");
+		this.perfCanvasContext = this.waveCanvas.getContext("2d");
 
 		// Compile base code
 		this.compileCode();
@@ -58,13 +62,17 @@ AudioToy.prototype = {
 		this.bufferSource.buffer = this.audioBuffer;
 		*/
 
-		this.bufferSource = this.audioContext.createScriptProcessor(4096, 0, 1);
+		this.bufferSource = this.audioContext.createScriptProcessor(this.bufferSize, 0, 1);
 		this.bufferSource.onaudioprocess = function(e) {
+			var timeBefore = Date.now();
 			var out = e.outputBuffer;
 			for(var channel = 0; channel < out.numberOfChannels; ++channel) {
 				var buffer = out.getChannelData(channel);
 				self.executeCode(buffer);
 			}
+			var calcDurationMs = Date.now() - timeBefore;
+			var sampleDurationMs = (1000.0 / self.sampleRate);
+			self.performanceRatio = (calcDurationMs / self.bufferSize) / sampleDurationMs;
 		}
 		this.bufferSource.connect(this.audioContext.destination);
 
@@ -157,21 +165,39 @@ AudioToy.prototype = {
 
 		if(Date.now() - this.lastCodeChangeTime > this.compilationDelay && this.lastCodeChangeTime > this.lastCompilationTime) {
 			this.compileCode();
-			this.executeCode();
+			//this.executeCode();
 		}
 
 		//var playOffset = this.bufferSource.
 
 		this.analyser.getByteTimeDomainData(this.amplitudeData);
 		this.renderWave();
+		this.renderPerf();
+	},
+
+	renderPerf: function() {
+		var g = this.perfCanvasContext;
+		var canvas = this.perfCanvas;
+
+		// Clear
+		g.fillStyle = "#171814";
+		g.fillRect(0, 0, canvas.width, canvas.height);
+
+		// Draw
+		var h = this.performanceRatio * canvas.height;
+		g.fillStyle = "#f00";
+		g.fillRect(0, canvas.height-1-h, canvas.width, h);
 	},
 
 	renderWave: function() {
-		var g = this.canvasContext;
+		var g = this.waveCanvasContext;
 		var canvas = this.waveCanvas;
 
+		// Clear
 		g.fillStyle = "#171814";
 		g.fillRect(0, 0, canvas.width, canvas.height);
+
+		// Draw
 
 		g.strokeStyle = "#fa4";
 		g.beginPath();
