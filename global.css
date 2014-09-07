@@ -1,0 +1,26 @@
+body {
+  background-color: #2f3129;
+  color: #aaaaaa;
+  padding: 0px;
+  margin: 0px;
+}
+#top-panel {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  border-bottom: 1px solid #222;
+  height: 50px;
+  padding: 0px;
+  margin: 0px;
+}
+#editor { 
+  position: absolute;
+  margin: 0px;
+  top: 51px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+#wave-canvas {
+  margin: 2px;
+}
