@@ -9,12 +9,12 @@
   <body>
 
     <div id="top-panel">
-       <canvas id="wave-canvas" width="300" height="46">Canvas</canvas> 
+       <canvas id="wave-canvas" width="399" height="46">Canvas</canvas> 
        <canvas id="perf-canvas" width="3" height="46">Canvas</canvas> 
-       <a href="#">PLAY</a>
+<!--        <a href="#">PLAY</a>
        <a href="#">PAUSE</a>
        <a href="#">RECORD</a>
-    </div>
+ -->    </div>
 
     <div id="editor">
 // Convenience constants
@@ -24,13 +24,24 @@ var tau = 2.0 * pi;
 // Mono output
 var out = [0];
 
-// This function is executed 44100 times per second
+// Some parameters
+var volume = 0.1;
+var frequency = 440;
+
+// This function is executed 44100 times per second (optional)
 function onGetSample (t) {
-  var volume = 0.1;
-  out[0] = volume * Math.sin(tau * t * 440);
+  out[0] = volume * Math.sin(tau * t * frequency);
   return out;
 }
+
+// This function is executed 60 times per second
+function onGui() {
+  // Future code will go here...
+}
 </div>
+
+    <div id="gui">
+    </div>
 
     <script src="libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>
     <script>

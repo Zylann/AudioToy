@@ -5,26 +5,32 @@ body {
   margin: 0px;
 }
 #top-panel {
-  position: absolute;
-  left: 0px;
-  right: 0px;
-  border-bottom: 1px solid #222;
   height: 50px;
-  padding: 0px;
-  margin: 0px;
+  border-bottom: 1px solid #222;
 }
 #editor { 
   position: absolute;
   margin: 0px;
+  float: none;
   top: 51px;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  right: 401px;
+  bottom: 0px;
+  left: 0px;
 }
 #wave-canvas {
   margin: 2px;
+  position: absolute;
+  right: 0px;
 }
 #perf-canvas {
   margin: 2px;
 }
-
+#gui {
+  position: absolute;
+  float: none;
+  left: 0px;
+  right: 0px;
+  top: 51px;
+  width: 400px;
+  border-left: 2px solid #222;
+}

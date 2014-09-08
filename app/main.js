@@ -7,7 +7,8 @@ var audiotoy = null;
 function AudioToy() {
 
 	this.apiFunctionNames = [
-		"onGetSample"
+		"onGetSample", // Called on each sample (44100Hz)
+		"onGui", // Called at 60Hz
 	];
 
 	this.playmode = 0;
@@ -42,6 +43,8 @@ AudioToy.prototype = {
 		this.waveCanvasContext = this.waveCanvas.getContext("2d");
 		this.perfCanvas = document.getElementById("perf-canvas");
 		this.perfCanvasContext = this.waveCanvas.getContext("2d");
+
+		audiotoy = new AudioToyAPI(this);
 
 		// Compile base code
 		this.compileCode();
@@ -104,7 +107,7 @@ AudioToy.prototype = {
 			var fname = this.apiFunctionNames[i];
 			memberDefs.push(fname + ":(typeof " + fname + "=='function'?" + fname + ":null)");
 		}
-		var appendix = "\n return {" + memberDefs.join(',') + "};";
+		var appendix = "\nreturn {" + memberDefs.join(',') + " };";
 		code += appendix;
 
 		this.lastCompilationTime = Date.now();
@@ -168,6 +171,10 @@ AudioToy.prototype = {
 			//this.executeCode();
 		}
 
+		if(this.compiledCode.onGui) {
+			this.compiledCode.onGui();
+		}
+
 		//var playOffset = this.bufferSource.
 
 		this.analyser.getByteTimeDomainData(this.amplitudeData);
@@ -227,6 +234,22 @@ AudioToy.prototype = {
 		g.stroke();
 	}
 
+};
+
+
+function AudioToyGUI() {
 }
+AudioToyGUI.prototype = {
+
+};
+
+
+function AudioToyAPI(a) {
+	var _core = a;
+
+	this.sampleRate = function() {
+		return _core.sampleRate;
+	}
+};
 
 
