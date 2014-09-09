@@ -34,3 +34,21 @@ body {
   width: 400px;
   border-left: 2px solid #222;
 }
+.tool-button {
+  font-size: 1.2em;
+  float: left;
+  width: 48px;
+  height: 44px;
+  line-height: 42px;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  margin: 3px 0px 0px 2px;
+  background: #3e4136;
+  color: #aaa;
+}
+.tool-button:active {
+  background-color: #22231e;
+  margin-top: 4px;
+}
+

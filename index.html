@@ -3,17 +3,21 @@
   <head>
     <title>AudioToy</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <script src="app/main.js"></script>
+    <link rel="stylesheet" href="libs/font-awesome-4.2.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="global.css" charset="utf-8"/>
+    <script src="app/main.js"></script>
   </head>  
   <body>
 
     <div id="top-panel">
-       <canvas id="wave-canvas" width="399" height="46">Canvas</canvas> 
-       <canvas id="perf-canvas" width="3" height="46">Canvas</canvas> 
-       <a id="play-button" href="#">PLAY</a>
-       <a id="stop-button" href="#">STOP</a>
-       <a id="record-button" href="#">RECORD</a>
+       <canvas id="wave-canvas" width="399" height="46">Canvas</canvas>
+       <canvas id="perf-canvas" width="3" height="46">Canvas</canvas>
+       <div class="tool-button" id="play-button"><span class="fa fa-play"></span></div>
+       <div class="tool-button" id="stop-button"><span class="fa fa-stop"></span></div>
+       <div class="tool-button" id="record-button"><span class="fa fa-circle"></span></div>
+       <a href="https://github.com/Zylann/AudioToy" target="_blank">
+        <div class="tool-button" id="github-button"><span class="fa fa-github"></span></div>
+       </a>
     </div>
 
     <div id="editor">

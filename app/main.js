@@ -50,6 +50,13 @@ AudioToy.prototype = {
 		this.stopButton.addEventListener("click", function() {
 			self.stop();
 		});
+
+		var githubButton = document.getElementById("github-button");
+		githubButton.addEventListener("click", function(){
+			// Pause when we go to github
+			self.setPlay(false);
+		})
+
 		// TODO wire
 
 		this.recordButton = document.getElementById("record-button");
@@ -195,9 +202,11 @@ AudioToy.prototype = {
 		var self = this;
 		if(this.isPlaying) {
 			this.bufferSource.onaudioprocess = function(e) { self.onAudioProcess(e); };
+			this.playButton.innerHTML = "<span class=\"fa fa-pause\"></span>"
 		}
 		else {
 			this.bufferSource.onaudioprocess = function(e) { self.onAudioProcessDummy(e); };
+			this.playButton.innerHTML = "<span class=\"fa fa-play\"></span>"
 		}
 		console.log("Playing: " + this.isPlaying);
 	},
