@@ -3,6 +3,8 @@
 // Variable accessible by the user, containing functions and API stuff
 var audiotoy = null;
 
+// TODO wrap everything in a closure
+
 
 function AudioToy() {
 
@@ -45,6 +47,9 @@ AudioToy.prototype = {
 		});
 
 		this.stopButton = document.getElementById("stop-button");
+		this.stopButton.addEventListener("click", function() {
+			self.stop();
+		});
 		// TODO wire
 
 		this.recordButton = document.getElementById("record-button");
@@ -79,18 +84,8 @@ AudioToy.prototype = {
 
 		// TODO wire isPlaying!
 		this.bufferSource = this.audioContext.createScriptProcessor(this.bufferSize, 0, 1);
-		this.bufferSource.onaudioprocess = function(e) {
-			var timeBefore = Date.now();
-			var out = e.outputBuffer;
-			for(var channel = 0; channel < out.numberOfChannels; ++channel) {
-				var buffer = out.getChannelData(channel);
-				self.executeCode(buffer);
-			}
-			var calcDurationMs = Date.now() - timeBefore;
-			var sampleDurationMs = (1000.0 / self.sampleRate);
-			self.performanceRatio = (calcDurationMs / self.bufferSize) / sampleDurationMs;
-		}
 		this.bufferSource.connect(this.audioContext.destination);
+		this.setPlay(true);
 
 		// start the source playing
 		//this.bufferSource.loop = true;
@@ -107,6 +102,28 @@ AudioToy.prototype = {
 		this.mainLoop();
 
 		console.log("}start");
+	},
+
+	onAudioProcess: function(e) {
+		var timeBefore = Date.now();
+		var out = e.outputBuffer;
+		for(var channel = 0; channel < out.numberOfChannels; ++channel) {
+			var buffer = out.getChannelData(channel);
+			this.executeCode(buffer);
+		}
+		var calcDurationMs = Date.now() - timeBefore;
+		var sampleDurationMs = (1000.0 / this.sampleRate);
+		this.performanceRatio = (calcDurationMs / this.bufferSize) / sampleDurationMs;
+	},
+
+	onAudioProcessDummy: function(e) {
+		var out = e.outputBuffer;
+		for(var channel = 0; channel < out.numberOfChannels; ++channel) {
+			var buffer = out.getChannelData(channel);
+			for(var i = 0; i < buffer.length; ++i) {
+				buffer[i] = 0;
+			}
+		}
 	},
 
 	compileCode: function() {
@@ -170,8 +187,24 @@ AudioToy.prototype = {
 	},
 
 	onPlayToggle: function() {
-		this.isPlaying = !this.isPlaying;
+		this.setPlay(!this.isPlaying);
+	},
+
+	setPlay: function(b) {
+		this.isPlaying = b;
+		var self = this;
+		if(this.isPlaying) {
+			this.bufferSource.onaudioprocess = function(e) { self.onAudioProcess(e); };
+		}
+		else {
+			this.bufferSource.onaudioprocess = function(e) { self.onAudioProcessDummy(e); };
+		}
 		console.log("Playing: " + this.isPlaying);
+	},
+
+	stop: function() {
+		this.setPlay(false);
+		this.t = 0;
 	},
 
 	mainLoop: function() {
