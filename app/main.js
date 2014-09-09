@@ -11,7 +11,7 @@ function AudioToy() {
 		"onGui", // Called at 60Hz
 	];
 
-	this.playmode = 0;
+	this.isPlaying = false;
 	this.compiledCode = null;
 	this.lastCodeChangeTime = 0;
 	this.lastCompilationTime = 0;
@@ -37,6 +37,18 @@ AudioToy.prototype = {
 			console.log("Code changed");
 			self.lastCodeChangeTime = Date.now();
 		});
+
+		// Transport buttons
+		this.playButton = document.getElementById("play-button");
+		this.playButton.addEventListener("click", function(){
+			self.onPlayToggle();
+		});
+
+		this.stopButton = document.getElementById("stop-button");
+		// TODO wire
+
+		this.recordButton = document.getElementById("record-button");
+		// TODO wire
 
 		// Create graphic contexts
 		this.waveCanvas = document.getElementById("wave-canvas");
@@ -65,6 +77,7 @@ AudioToy.prototype = {
 		this.bufferSource.buffer = this.audioBuffer;
 		*/
 
+		// TODO wire isPlaying!
 		this.bufferSource = this.audioContext.createScriptProcessor(this.bufferSize, 0, 1);
 		this.bufferSource.onaudioprocess = function(e) {
 			var timeBefore = Date.now();
@@ -157,7 +170,8 @@ AudioToy.prototype = {
 	},
 
 	onPlayToggle: function() {
-
+		this.isPlaying = !this.isPlaying;
+		console.log("Playing: " + this.isPlaying);
 	},
 
 	mainLoop: function() {
