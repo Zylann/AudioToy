@@ -21,6 +21,7 @@
     </div>
 
     <div id="editor">
+
 // Convenience constants
 var pi = Math.PI;
 var tau = 2.0 * pi;
@@ -32,15 +33,17 @@ var out = [0];
 var volume = 0.1;
 var frequency = 440;
 
-// This function is executed 44100 times per second (optional)
+/// \brief This function is executed 44100 times per second
+/// and is used to generate the final sound wave.
 function onGetSample (t) {
+  // Sine wave generator
   out[0] = volume * Math.sin(tau * t * frequency);
   return out;
 }
 
-// This function is executed 60 times per second
+/// \brief This function is executed 60 times per second (optional).
 function onGui() {
-  // Future code will go here...
+  // Future code will go here, maybe...
 }
 </div>
 
