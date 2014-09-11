@@ -8,7 +8,7 @@ The first next features I'm focusing on is stereo support, fader-style controls 
 Features
 ---------
 
-* Mono sound
+* Stereo sound
 * Play, pause and stop (resets time)
 * Wave visualizer
 * CPU usage meter
