@@ -14,7 +14,7 @@
        <canvas id="perf-canvas" width="3" height="46">Canvas</canvas>
        <div class="tool-button" id="play-button"><span class="fa fa-play"></span></div>
        <div class="tool-button" id="stop-button"><span class="fa fa-stop"></span></div>
-       <div class="tool-button" id="record-button"><span class="fa fa-circle"></span></div>
+<!--        <div class="tool-button" id="record-button"><span class="fa fa-circle"></span></div> -->
        <a href="https://github.com/Zylann/AudioToy" target="_blank">
         <div class="tool-button" id="github-button"><span class="fa fa-github"></span></div>
        </a>
@@ -27,7 +27,7 @@ var pi = Math.PI;
 var tau = 2.0 * pi;
 
 // Mono output
-var out = [0];
+var out = [0,0];
 
 // Some parameters
 var volume = 0.1;
@@ -37,7 +37,10 @@ var frequency = 440;
 /// and is used to generate the final sound wave.
 function onGetSample (t) {
   // Sine wave generator
-  out[0] = volume * Math.sin(tau * t * frequency);
+  var s_left = volume * Math.sin(tau * t * frequency);
+  var s_right = volume * Math.sin(tau * t * frequency * 1.01);
+  out[0] = s_left;
+  out[1] = s_right;
   return out;
 }
 
@@ -45,6 +48,8 @@ function onGetSample (t) {
 function onGui() {
   // Future code will go here, maybe...
 }
+
+
 </div>
 
     <div id="gui">

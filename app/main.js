@@ -74,11 +74,12 @@ AudioToy.prototype = {
 		this.compileCode();
 
 		// Create audio context
-		this.channelCount = 1;
+		this.channelCount = 2;
 		this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-		this.audioBuffer = this.audioContext.createBuffer(this.channelCount, 1*this.sampleRate, this.sampleRate);
 
 		/*
+		//this.audioBuffer = this.audioContext.createBuffer(this.channelCount, 1*this.sampleRate, this.sampleRate);
+
 		// Get an AudioBufferSourceNode.
 		// This is the AudioNode to use when we want to play an AudioBuffer
 		this.bufferSource = this.audioContext.createBufferSource();
@@ -89,8 +90,7 @@ AudioToy.prototype = {
 		this.bufferSource.buffer = this.audioBuffer;
 		*/
 
-		// TODO wire isPlaying!
-		this.bufferSource = this.audioContext.createScriptProcessor(this.bufferSize, 0, 1);
+		this.bufferSource = this.audioContext.createScriptProcessor(this.bufferSize, 0, this.channelCount); // 0 inputs, 2 outputs
 		this.bufferSource.connect(this.audioContext.destination);
 		this.setPlay(true);
 
@@ -113,11 +113,14 @@ AudioToy.prototype = {
 
 	onAudioProcess: function(e) {
 		var timeBefore = Date.now();
+
 		var out = e.outputBuffer;
+		var buffers = []
 		for(var channel = 0; channel < out.numberOfChannels; ++channel) {
-			var buffer = out.getChannelData(channel);
-			this.executeCode(buffer);
+			buffers.push(out.getChannelData(channel));
 		}
+		this.executeCode(buffers);
+
 		var calcDurationMs = Date.now() - timeBefore;
 		var sampleDurationMs = (1000.0 / this.sampleRate);
 		this.performanceRatio = (calcDurationMs / this.bufferSize) / sampleDurationMs;
@@ -166,23 +169,34 @@ AudioToy.prototype = {
 		return true;
 	},
 
-	executeCode: function(buffer) {
-		if(buffer == null) {
+	executeCode: function(buffers) {
+		if(buffers == null || buffers.length == 0) {
 			return;
 		}
 		try{
 			// Execute code
 			if(this.compiledCode.onGetSample != null) {
 
+				var bufCount = buffers.length;
+				var bufLength = buffers[0].length;
+
 				var onGetSample = this.compiledCode.onGetSample;
 				var sampleDuration = 1.0 / this.sampleRate;
 
-				for(var i = 0; i < buffer.length; ++i) {
+				// For each sample (all channels)
+				for(var i = 0; i < bufLength; ++i) {
+					
+					// Calculate sample
 					var out = onGetSample(this.t);
-					var s = out[0];
-					if(s > 1) s = 1;
-					if(s < -1) s = -1;
-					buffer[i] = s;
+					
+					// For each channel
+					for(var c = 0; c < out.length && c < bufCount; ++c) {
+						var s = out[c];
+						if(s > 1) s = 1;
+						if(s < -1) s = -1;
+						buffers[c][i] = s;
+					}
+
 					this.t += sampleDuration;
 				}
 			}
@@ -243,7 +257,7 @@ AudioToy.prototype = {
 		var canvas = this.perfCanvas;
 
 		// Clear
-		g.fillStyle = "#171814";
+		g.fillStyle = "#191916"; //"#171814";
 		g.fillRect(0, 0, canvas.width, canvas.height);
 
 		// Draw
@@ -257,7 +271,7 @@ AudioToy.prototype = {
 		var canvas = this.waveCanvas;
 
 		// Clear
-		g.fillStyle = "#171814";
+		g.fillStyle = "#191916";//"#171814";
 		g.fillRect(0, 0, canvas.width, canvas.height);
 
 		// Draw

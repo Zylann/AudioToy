@@ -1,5 +1,5 @@
 body {
-  background-color: #2f3129;
+  background-color: #191916; /*#2f3129;*/
   color: #aaaaaa;
   padding: 0px;
   margin: 0px;
@@ -44,8 +44,12 @@ body {
   vertical-align: middle;
   cursor: pointer;
   margin: 3px 0px 0px 2px;
-  background: #3e4136;
+  background: #2f3129; /*#3e4136;*/
   color: #aaa;
+}
+.tool-button-held {
+  background-color: #22231e;
+  margin-top: 4px;
 }
 .tool-button:active {
   background-color: #22231e;
