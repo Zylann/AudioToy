@@ -3,6 +3,8 @@ body {
   color: #aaaaaa;
   padding: 0px;
   margin: 0px;
+  font-family: Helvetica;
+  font-size: 0.9em;
 }
 #top-panel {
   height: 50px;
@@ -14,7 +16,7 @@ body {
   float: none;
   top: 51px;
   right: 401px;
-  bottom: 0px;
+  bottom: 25px;
   left: 0px;
 }
 #wave-canvas {
@@ -55,4 +57,17 @@ body {
   background-color: #22231e;
   margin-top: 4px;
 }
-
+#status-bar {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  height: 24px;
+  background-color: #191916;
+  border-top: 1px solid #222;
+  padding-left: 8px;
+  color: #555;
+}
+#status-bar .error {
+  color: #f22;
+}

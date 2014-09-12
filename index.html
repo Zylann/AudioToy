@@ -36,23 +36,26 @@ var frequency = 440;
 /// \brief This function is executed 44100 times per second
 /// and is used to generate the final sound wave.
 function onGetSample (t) {
-  // Sine wave generator
-  var s_left = volume * Math.sin(tau * t * frequency);
-  var s_right = volume * Math.sin(tau * t * frequency * 1.01);
-  out[0] = s_left;
-  out[1] = s_right;
-  return out;
+    // Sine wave generator
+    var s_left = volume * Math.sin(tau * t * frequency);
+    var s_right = volume * Math.sin(tau * t * frequency * 1.01);
+    out[0] = s_left;
+    out[1] = s_right;
+    return out;
 }
 
 /// \brief This function is executed 60 times per second (optional).
 function onGui() {
-  // Future code will go here, maybe...
+   // Future code will go here, maybe...
 }
 
 
 </div>
 
     <div id="gui">
+    </div>
+
+    <div id="status-bar">
     </div>
 
     <script src="libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>

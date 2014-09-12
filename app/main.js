@@ -40,6 +40,9 @@ AudioToy.prototype = {
 			self.lastCodeChangeTime = Date.now();
 		});
 
+		// Status bar
+		this.statusBar = document.getElementById("status-bar");
+
 		// Transport buttons
 		this.playButton = document.getElementById("play-button");
 		this.playButton.addEventListener("click", function(){
@@ -164,10 +167,12 @@ AudioToy.prototype = {
 		catch(ex) {
 			// Something failed when compiling the user's code
 			console.log("Compilation failed: " + ex.message + "\n" + ex.stack);
+			this.setStatusError("Compilation failed: " + ex.message);
 			return false;
 		}
 
 		console.log("Compiled");
+		this.setStatusInfo("Compiled successfully");
 		this.compiledCode = pack;
 		return true;
 	},
@@ -203,10 +208,10 @@ AudioToy.prototype = {
 					this.t += sampleDuration;
 				}
 			}
-			//console.log("Executed");
 		}
 		catch(ex) {
-			console.log("Execution error: " + ex.message + "\n" + ex.stack);
+			console.log("Execution error: " + ex.message + "\n" + ex);
+			this.setStatusError("Execution error: " + ex.message);
 		}
 	},
 
@@ -241,7 +246,6 @@ AudioToy.prototype = {
 
 		if(Date.now() - this.lastCodeChangeTime > this.compilationDelay && this.lastCodeChangeTime > this.lastCompilationTime) {
 			this.compileCode();
-			//this.executeCode();
 		}
 
 		if(this.compiledCode.onGui) {
@@ -306,6 +310,14 @@ AudioToy.prototype = {
 		//g.lineTo(canvas.width, canvas.height/2);
 		g.stroke();
 	},
+
+	setStatusInfo: function(message) {
+		this.statusBar.innerHTML = "<span class=\"fa fa-check\"></span> " + message;
+	},
+
+	setStatusError: function(message) {
+		this.statusBar.innerHTML = "<span class=\"error\"><span class=\"fa fa-remove\"></span> " + message + "</span>";
+	}
 
 };
 

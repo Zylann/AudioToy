@@ -12,4 +12,6 @@ Features
 * Play, pause and stop (resets time)
 * Wave visualizer
 * CPU usage meter
+* Automatic compilation
+* Notifies compile/execution errors (WIP)
 
