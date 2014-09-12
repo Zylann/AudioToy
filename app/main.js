@@ -92,7 +92,7 @@ AudioToy.prototype = {
 
 		this.bufferSource = this.audioContext.createScriptProcessor(this.bufferSize, 0, this.channelCount); // 0 inputs, 2 outputs
 		this.bufferSource.connect(this.audioContext.destination);
-		this.setPlay(true);
+		//this.setPlay(true);
 
 		// start the source playing
 		//this.bufferSource.loop = true;
@@ -137,6 +137,9 @@ AudioToy.prototype = {
 	},
 
 	compileCode: function() {
+		// Header definitions
+		var header = "var sampleRate=" + this.sampleRate + ";"; // No newline to not mess with error line numbers
+
 		// Get user code
 		var code = this.editor.getValue();
 		
@@ -302,7 +305,7 @@ AudioToy.prototype = {
 		g.lineWidth = 1;
 		//g.lineTo(canvas.width, canvas.height/2);
 		g.stroke();
-	}
+	},
 
 };
 
